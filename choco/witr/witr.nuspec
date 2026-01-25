@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Read this before creating packages: https://docs.chocolatey.org/en-us/create/create-packages -->
+<!-- It is especially important to read the above link to understand additional requirements when publishing packages to the community feed aka dot org (https://community.chocolatey.org/packages). -->
+
+<!-- Test your packages in a test environment: https://github.com/chocolatey/chocolatey-test-environment -->
+
+<!--
+This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Reference. Chocolatey uses a special version of NuGet.Core that allows us to do more than was initially possible. As such there are certain things to be aware of:
+
+* the package xmlns schema url may cause issues with nuget.exe
+* Any of the following elements can ONLY be used by choco tools - projectSourceUrl, docsUrl, mailingListUrl, bugTrackerUrl, packageSourceUrl, provides, conflicts, replaces
+* nuget.exe can still install packages with those elements but they are ignored. Any authoring tools or commands will error on those elements
+-->
+
+<!-- You can embed software files directly into packages, as long as you are not bound by distribution rights. -->
+<!-- * If you are an organization making private packages, you probably have no issues here -->
+<!-- * If you are releasing to the community feed, you need to consider distribution rights. -->
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>witr</id>
+    <version>0.2.5</version>
+    <owners>Pranshu Parmar</owners>
+    <title>witr</title>
+    <authors>Pranshu Parmar</authors>
+    <projectUrl>https://github.com/pranshuparmar/witr</projectUrl>
+    <licenseUrl>https://github.com/pranshuparmar/witr/blob/main/LICENSE</licenseUrl>
+    <bugTrackerUrl>https://github.com/pranshuparmar/witr/issues</bugTrackerUrl>
+    <packageSourceUrl>https://github.com/pranshuparmar/witr</packageSourceUrl>
+    <tags>witr process monitoring debug productivity</tags>
+    <summary>Why is this running? Explains the causal chain behind running processes with additional insights.</summary>
+    <description>
+**witr** exists to answer a single question:
+
+> **Why is this running?**
+
+When something is running on a system—whether it is a process, a service, or something bound to a port—there is always a cause. That cause is often indirect, non-obvious, or spread across multiple layers such as supervisors, containers, services, or shells.
+
+**witr** makes that causality explicit.
+
+It explains **where a running thing came from**, **how it was started**, and **what chain of systems is responsible for it existing right now**, in a single, human-readable output.
+    </description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
