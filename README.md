@@ -13,6 +13,7 @@ This repository hosts the self maintained package manifests. `witr` is available
 
 | Package Manager | Status | Manifest Location |
 | :--- | :--- | :--- |
-| **Chocolatey** | ⚠️ Under Review | [`choco/`](./choco) |
-| **Scoop** | ⚠️ Under Review | [`scoop/`](./scoop) |
-| **Winget** | ✅ Live | [`winget/`](./winget) |
+| **Chocolatey** | ⚠️ [Under Review](https://community.chocolatey.org/packages/witr/0.2.5) | [`choco/`](./choco) |
+| **Scoop** | ⚠️ [Under Review](https://github.com/ScoopInstaller/Main/pull/7542) | [`scoop/`](./scoop) |
+| **Winget** | ✅ [Live](https://github.com/microsoft/winget-pkgs/tree/master/manifests/p/PranshuParmar/witr) | [`winget/`](./winget) |
+| **Anaconda** | ✅ [Live](https://github.com/conda-forge/witr-feedstock) | |
