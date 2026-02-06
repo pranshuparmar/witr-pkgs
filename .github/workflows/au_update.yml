@@ -1,9 +1,9 @@
-name: Auto Update
+name: Choco Auto Update
 
 on:
   workflow_dispatch: # Enable manual trigger
-  schedule:
-    - cron: '5 0 * * *'
+  # schedule:
+  #   - cron: '5 0 * * *'
 
 jobs:
   auto_update:
@@ -31,8 +31,8 @@ jobs:
 
       - name: Git Push
         run: |
-          git config --global user.email "chocolatey@realdimensions.net"
-          git config --global user.name "Chocolatey"
+          git config --global user.email "pranshu.parmar@gmail.com"
+          git config --global user.name "Pranshu Parmar"
           git add -A
           git diff --quiet --exit-code; if ($LASTEXITCODE -ne 0) {
             git commit -m 'AU auto update'
