@@ -2,4 +2,4 @@ Import-Module au
 $ErrorActionPreference = 'Stop'
 $au_root = $PSScriptRoot
 
-Get-AUPackages $au_root | Update-AUPackages
+ls $au_root -Recurse -Filter update.ps1 | Update-AUPackages -Options @{ Push = $true }
