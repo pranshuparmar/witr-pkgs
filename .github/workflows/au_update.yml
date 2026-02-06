@@ -27,7 +27,7 @@ jobs:
             CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./update_all.ps1
+          ./choco/update_all.ps1
 
       - name: Git Push
         run: |

@@ -1,0 +1,13 @@
+# Chocolatey build artifacts
+*.nupkg
+*.nupkg.bak
+
+# Downloaded assets (if any local testing leaves them)
+*.zip
+*.exe
+*.msi
+
+# Editor/Temp files
+.vscode/
+*.log
+_SAVED_
