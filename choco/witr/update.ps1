@@ -15,7 +15,7 @@ function global:au_SearchReplace {
 }
 
 function global:au_GetLatest {
-    $json = Invoke-WebRequest -Uri $releases | ConvertFrom-Json
+    $json = Invoke-RestMethod -Uri $releases
 
     $url64 = $json.assets | Where-Object { $_.name -like "*windows-amd64.zip" } | Select-Object -ExpandProperty browser_download_url
     $urlArm64 = $json.assets | Where-Object { $_.name -like "*windows-arm64.zip" } | Select-Object -ExpandProperty browser_download_url
