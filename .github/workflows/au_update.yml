@@ -1,0 +1,42 @@
+name: Auto Update
+
+on:
+  workflow_dispatch: # Enable manual trigger
+  schedule:
+    - cron: '5 0 * * *'
+
+jobs:
+  auto_update:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+
+      - name: Install AU
+        run: |
+          git clone -q https://github.com/majkinetor/au.git $env:TEMP/au
+          . "$env:TEMP/au/scripts/Install-AU.ps1" $env:au_version
+
+      - name: Check update needed
+        env:
+            au_push: true
+            CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./update_all.ps1
+
+      - name: Git Push
+        run: |
+          git config --global user.email "chocolatey@realdimensions.net"
+          git config --global user.name "Chocolatey"
+          git add -A
+          git diff --quiet --exit-code; if ($LASTEXITCODE -ne 0) {
+            git commit -m 'AU auto update'
+            git push
+          }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
