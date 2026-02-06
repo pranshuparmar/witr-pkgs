@@ -8,8 +8,8 @@ function global:au_SearchReplace {
         ".\tools\chocolateyinstall.ps1" = @{
             '(?i)(^\s*\$url64\s*=\s*)(''.*'')'        = "`$1'$($Latest.URL64)'"
             '(?i)(^\s*\$checksum64\s*=\s*)(''.*'')'   = "`$1'$($Latest.Checksum64)'"
-            '(?i)(^\s*\$urlArm64\s*=\s*)(''.*'')'     = "`$1'$($Latest.URLARM64)'"
-            '(?i)(^\s*\$checksumArm64\s*=\s*)(''.*'')'= "`$1'$($Latest.ChecksumARM64)'"
+            '(?i)(^\s*\$urlArm64\s*=\s*)(''.*'')'     = "`$1'$($Latest.URL32)'"
+            '(?i)(^\s*\$checksumArm64\s*=\s*)(''.*'')'= "`$1'$($Latest.Checksum32)'"
         }
     }
 }
@@ -27,7 +27,7 @@ function global:au_GetLatest {
     @{
         Version  = $version
         URL64    = $url64
-        URLARM64 = $urlArm64
+        URL32    = $urlArm64
         FileType = 'zip'
     }
 }
