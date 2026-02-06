@@ -24,11 +24,15 @@ function global:au_GetLatest {
     if (-not $url64) { throw "amd64 asset not found" }
     if (-not $urlArm64) { throw "arm64 asset not found" }
 
+    # Manually calculate checksum for ARM64 to avoid AU's 32-bit logic
+    $checksumArm64 = Get-RemoteChecksum -Url $urlArm64
+
     @{
-        Version  = $version
-        URL64    = $url64
-        URLARM64    = $urlArm64
-        FileType = 'zip'
+        Version       = $version
+        URL64         = $url64
+        URLARM64      = $urlArm64
+        ChecksumARM64 = $checksumArm64
+        FileType      = 'zip'
     }
 }
 

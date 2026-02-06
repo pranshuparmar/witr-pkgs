@@ -34,7 +34,7 @@ jobs:
           git config --global user.email "pranshu.parmar@gmail.com"
           git config --global user.name "Pranshu Parmar"
           git add -A
-          git diff --quiet --exit-code; if ($LASTEXITCODE -ne 0) {
+          git diff --cached --quiet --exit-code; if ($LASTEXITCODE -ne 0) {
             git commit -m 'AU auto update'
             git push
           }
