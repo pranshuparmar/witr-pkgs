@@ -8,14 +8,14 @@ function global:au_SearchReplace {
         ".\tools\chocolateyinstall.ps1" = @{
             '(?i)(^\s*\$url64\s*=\s*)(''.*'')'        = "`$1'$($Latest.URL64)'"
             '(?i)(^\s*\$checksum64\s*=\s*)(''.*'')'   = "`$1'$($Latest.Checksum64)'"
-            '(?i)(^\s*\$urlArm64\s*=\s*)(''.*'')'     = "`$1'$($Latest.URL32)'"
-            '(?i)(^\s*\$checksumArm64\s*=\s*)(''.*'')'= "`$1'$($Latest.Checksum32)'"
+            '(?i)(^\s*\$urlArm64\s*=\s*)(''.*'')'     = "`$1'$($Latest.URLARM64)'"
+            '(?i)(^\s*\$checksumArm64\s*=\s*)(''.*'')'= "`$1'$($Latest.ChecksumARM64)'"
         }
     }
 }
 
 function global:au_GetLatest {
-    $json = Invoke-RestMethod -Uri $releases
+    $json = Invoke-RestMethod -Uri $releases -Headers @{ "User-Agent" = "Chocolatey-AU" }
 
     $url64 = $json.assets | Where-Object { $_.name -like "*windows-amd64.zip" } | Select-Object -ExpandProperty browser_download_url
     $urlArm64 = $json.assets | Where-Object { $_.name -like "*windows-arm64.zip" } | Select-Object -ExpandProperty browser_download_url
@@ -27,7 +27,7 @@ function global:au_GetLatest {
     @{
         Version  = $version
         URL64    = $url64
-        URL32    = $urlArm64
+        URLARM64    = $urlArm64
         FileType = 'zip'
     }
 }
