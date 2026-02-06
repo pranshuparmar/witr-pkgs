@@ -6,10 +6,10 @@ $releases = 'https://api.github.com/repos/pranshuparmar/witr/releases/latest'
 function global:au_SearchReplace {
     @{
         ".\tools\chocolateyinstall.ps1" = @{
-            "(?i)(^\s*`$url64\s*=\s*)('.*')"        = "`$1'$($Latest.URL64)'"
-            "(?i)(^\s*`$checksum64\s*=\s*)('.*')"   = "`$1'$($Latest.Checksum64)'"
-            "(?i)(^\s*`$urlArm64\s*=\s*)('.*')"     = "`$1'$($Latest.URLARM64)'"
-            "(?i)(^\s*`$checksumArm64\s*=\s*)('.*')"= "`$1'$($Latest.ChecksumARM64)'"
+            "(?i)(^\s*`\$url64\s*=\s*)('.*')"        = "`$1'$($Latest.URL64)'"
+            "(?i)(^\s*`\$checksum64\s*=\s*)('.*')"   = "`$1'$($Latest.Checksum64)'"
+            "(?i)(^\s*`\$urlArm64\s*=\s*)('.*')"     = "`$1'$($Latest.URLARM64)'"
+            "(?i)(^\s*`\$checksumArm64\s*=\s*)('.*')"= "`$1'$($Latest.ChecksumARM64)'"
         }
     }
 }
