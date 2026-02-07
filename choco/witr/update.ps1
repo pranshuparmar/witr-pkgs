@@ -36,4 +36,4 @@ function global:au_GetLatest {
     }
 }
 
-Update-Package -ChecksumFor 64
+Update-Package -ChecksumFor 64 -NoReadme
