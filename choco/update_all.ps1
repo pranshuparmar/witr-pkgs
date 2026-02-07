@@ -3,6 +3,6 @@ $ErrorActionPreference = 'Stop'
 
 $au_root = $PSScriptRoot
 
-ls $au_root -Recurse -Filter update.ps1 | Update-AUPackages
+Update-AUPackages -Path $au_root
 
 choco push "$au_root\**\*.nupkg" --source https://push.chocolatey.org/
