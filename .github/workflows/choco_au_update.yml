@@ -21,8 +21,7 @@ jobs:
 
       - name: Install AU
         run: |
-          git clone -q https://github.com/majkinetor/au.git $env:TEMP/au
-          . "$env:TEMP/au/scripts/Install-AU.ps1" $env:au_version
+          Install-Module AU -Scope CurrentUser -Force
 
       - name: Check update needed
         env:

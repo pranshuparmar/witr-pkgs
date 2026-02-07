@@ -3,6 +3,12 @@ $ErrorActionPreference = 'Stop'
 
 $au_root = $PSScriptRoot
 
-Update-AUPackages -Path $au_root
+Set-Location $au_root
+Update-AUPackages
 
-choco push "$au_root\**\*.nupkg" --source https://push.chocolatey.org/
+Get-ChildItem $au_root -Recurse -Filter *.nupkg |
+Sort-Object LastWriteTime -Descending |
+Select-Object -First 1 |
+ForEach-Object {
+    choco push $_.FullName --source https://push.chocolatey.org/ --api-key $env:CHOCO_API_KEY
+}
