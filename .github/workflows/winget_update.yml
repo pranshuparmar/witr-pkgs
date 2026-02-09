@@ -1,0 +1,47 @@
+name: Update Winget Manifests
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-manifests:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install WingetCreate
+        run: dotnet tool install -g Microsoft.WingetCreate
+
+      - name: Update Manifests
+        env:
+          GITHUB_TOKEN: ${{ secrets.WINGET_PAT }}
+        run: |
+          ./scripts/update_winget.ps1 -GitHubToken $env:GITHUB_TOKEN -Submit
+
+      - name: Verify Changes
+        run: |
+          git status
+          git diff
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          if (git status --porcelain) {
+            git add .
+            git commit -m "chore: update winget manifests [skip ci]"
+            git push origin main
+          } else {
+            Write-Host "No changes to commit."
+          }
