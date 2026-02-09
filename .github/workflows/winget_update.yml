@@ -35,13 +35,10 @@ jobs:
         run: |
           $version = "${{ steps.release.outputs.version }}"
 
-          wingetcreate new `
-            --package-id PranshuParmar.witr `
+          wingetcreate update PranshuParmar.witr `
             --version $version `
-            --installer https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-amd64.zip `
-            --installer https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-arm64.zip `
-            --out winget/manifests `
-            --silent
+            --urls https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-amd64.zip https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-arm64.zip `
+            --out winget/manifests
 
       - name: Submit manifests to winget-pkgs
         env:
@@ -49,6 +46,6 @@ jobs:
         shell: powershell
         run: |
           wingetcreate submit `
-            winget/manifests `
+            winget/manifests/p/PranshuParmar/witr/${{ steps.release.outputs.version }} `
             --prtitle "witr ${{ steps.release.outputs.version }}" `
             --token $env:WINGET_TOKEN
