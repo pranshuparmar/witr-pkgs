@@ -1,47 +1,56 @@
-name: Update Winget Manifests
+name: Winget Auto Update
 
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  update-manifests:
+  winget:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: powershell
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Install WingetCreate
-        run: dotnet tool install -g WingetCreate
-
-      - name: Update Manifests
-        env:
-          GITHUB_TOKEN: ${{ secrets.WINGET_PAT }}
+      - name: Install wingetcreate
+        shell: powershell
         run: |
-          ./scripts/update_winget.ps1 -GitHubToken $env:GITHUB_TOKEN -Submit
+          $url = "https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate.exe"
+          $dest = "$env:USERPROFILE\wingetcreate.exe"
+          Invoke-WebRequest -Uri $url -OutFile $dest
+          echo "$env:USERPROFILE" >> $env:GITHUB_PATH
 
-      - name: Verify Changes
+      - name: Fetch latest witr release
+        id: release
+        shell: powershell
         run: |
-          git status
-          git diff
+          $repo = "pranshuparmar/witr"
+          $url = "https://api.github.com/repos/$repo/releases/latest"
 
-      - name: Commit and Push
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          if (git status --porcelain) {
-            git add .
-            git commit -m "chore: update winget manifests [skip ci]"
-            git push origin main
+          $headers = @{ "Accept" = "application/vnd.github+json" }
+          $response = Invoke-RestMethod -Uri $url -Headers $headers
+
+          $tag = $response.tag_name
+          if ($tag.StartsWith("v")) {
+            $version = $tag.Substring(1)
           } else {
-            Write-Host "No changes to commit."
+            $version = $tag
           }
+
+          Write-Host "Latest version: $version"
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Submit to winget (x64 + arm64)
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_PAT }}
+        shell: powershell
+        run: |
+          if (-not $env:WINGET_TOKEN) {
+            Write-Error "WINGET_PAT secret is missing"
+            exit 1
+          }
+
+          $version = "${{ steps.release.outputs.version }}"
+
+          wingetcreate submit `
+            --package-id PranshuParmar.witr `
+            --version $version `
+            --installer https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-amd64.zip `
+            --installer https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-arm64.zip `
+            --token $env:WINGET_TOKEN
