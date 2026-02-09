@@ -47,10 +47,12 @@ jobs:
         shell: powershell
         run: |
           $version = "${{ steps.release.outputs.version }}"
+          $manifestPath = "temp_manifests/p/PranshuParmar/witr/$version"
           wingetcreate submit `
-            temp_manifests `
+            $manifestPath `
             --prtitle "witr $version" `
             --token $env:WINGET_TOKEN
+
 
       
       - name: Commit and Push
@@ -58,8 +60,9 @@ jobs:
         run: |
           $version = "${{ steps.release.outputs.version }}"
           $repo_path = "winget/manifests/p/PranshuParmar/witr/$version"
+          $src_path  = "temp_manifests/p/PranshuParmar/witr/$version"
           New-Item -ItemType Directory -Force -Path $repo_path
-          Copy-Item "temp_manifests/*" -Destination $repo_path -Recurse
+          Copy-Item "$src_path/*" -Destination $repo_path -Recurse
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
