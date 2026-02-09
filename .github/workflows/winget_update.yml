@@ -47,7 +47,7 @@ jobs:
         shell: powershell
         run: |
           $version = "${{ steps.release.outputs.version }}"
-          $manifestPath = "temp_manifests/p/PranshuParmar/witr/$version"
+          $manifestPath = "temp_manifests/manifests/p/PranshuParmar/witr/$version"
           wingetcreate submit `
             $manifestPath `
             --prtitle "witr $version" `
@@ -60,7 +60,7 @@ jobs:
         run: |
           $version = "${{ steps.release.outputs.version }}"
           $repo_path = "winget/manifests/p/PranshuParmar/witr/$version"
-          $src_path  = "temp_manifests/p/PranshuParmar/witr/$version"
+          $src_path  = "temp_manifests/manifests/p/PranshuParmar/witr/$version"
           New-Item -ItemType Directory -Force -Path $repo_path
           Copy-Item "$src_path/*" -Destination $repo_path -Recurse
 
