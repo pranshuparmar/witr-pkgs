@@ -8,6 +8,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Checkout packaging repo
+        uses: actions/checkout@v6
+
       - name: Install wingetcreate
         shell: powershell
         run: |
@@ -22,35 +25,30 @@ jobs:
         run: |
           $repo = "pranshuparmar/witr"
           $url = "https://api.github.com/repos/$repo/releases/latest"
-
-          $headers = @{ "Accept" = "application/vnd.github+json" }
-          $response = Invoke-RestMethod -Uri $url -Headers $headers
-
-          $tag = $response.tag_name
-          if ($tag.StartsWith("v")) {
-            $version = $tag.Substring(1)
-          } else {
-            $version = $tag
-          }
-
-          Write-Host "Latest version: $version"
+          $resp = Invoke-RestMethod $url
+          $tag = $resp.tag_name
+          $version = $tag.TrimStart("v")
           "version=$version" >> $env:GITHUB_OUTPUT
 
-      - name: Submit to winget (x64 + arm64)
-        env:
-          WINGET_TOKEN: ${{ secrets.WINGET_PAT }}
+      - name: Generate winget manifests
         shell: powershell
         run: |
-          if (-not $env:WINGET_TOKEN) {
-            Write-Error "WINGET_PAT secret is missing"
-            exit 1
-          }
-
           $version = "${{ steps.release.outputs.version }}"
 
-          wingetcreate submit `
+          wingetcreate new `
             --package-id PranshuParmar.witr `
             --version $version `
             --installer https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-amd64.zip `
             --installer https://github.com/pranshuparmar/witr/releases/download/v$version/witr-windows-arm64.zip `
+            --out winget/manifests `
+            --silent
+
+      - name: Submit manifests to winget-pkgs
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_PAT }}
+        shell: powershell
+        run: |
+          wingetcreate submit `
+            winget/manifests `
+            --prtitle "witr ${{ steps.release.outputs.version }}" `
             --token $env:WINGET_TOKEN
