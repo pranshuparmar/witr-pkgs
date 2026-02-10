@@ -66,6 +66,7 @@ jobs:
           $src_path  = "temp_manifests/manifests/p/PranshuParmar/witr/$version"
           New-Item -ItemType Directory -Force -Path $repo_path
           Copy-Item "$src_path/*" -Destination $repo_path -Recurse
+          Remove-Item -Recurse -Force temp_manifests
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
