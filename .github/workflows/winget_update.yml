@@ -53,7 +53,7 @@ jobs:
           $manifestPath = "temp_manifests/manifests/p/PranshuParmar/witr/$version"
           wingetcreate submit `
             $manifestPath `
-            --prtitle "witr $version" `
+            --prtitle "Update: PranshuParmar.witr version $version" `
             --token $env:WINGET_TOKEN
 
 
@@ -73,7 +73,7 @@ jobs:
           
           if (git status --porcelain) {
             git add .
-            git commit -m "chore: update winget manifests [skip ci]"
+            git commit -m "chore: update winget manifests"
             git push origin main
           } else {
             Write-Host "No changes to commit."
