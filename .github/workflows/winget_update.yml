@@ -25,7 +25,10 @@ jobs:
         run: |
           $repo = "pranshuparmar/witr"
           $url = "https://api.github.com/repos/$repo/releases/latest"
-          $resp = Invoke-RestMethod $url
+          $headers = @{
+            Authorization = "Bearer ${{ secrets.GITHUB_TOKEN }}"
+          }
+          $resp = Invoke-RestMethod -Uri $url -Headers $headers
           $tag = $resp.tag_name
           $version = $tag.TrimStart("v")
           "version=$version" >> $env:GITHUB_OUTPUT
