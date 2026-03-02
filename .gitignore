@@ -11,3 +11,6 @@
 .vscode/
 *.log
 _SAVED_
+
+# node
+node_modules

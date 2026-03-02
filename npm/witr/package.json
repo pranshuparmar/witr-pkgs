@@ -1,0 +1,22 @@
+{
+  "name": "@pranshuparmar/witr",
+  "version": "0.2.9",
+  "bin": {
+    "witr": "index.js"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32",
+    "freebsd"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "follow-redirects": "^1.15.11"
+  }
+}
