@@ -18,3 +18,4 @@ This repository hosts the self maintained package manifests. `witr` is available
 | **Scoop** | ✅ [Live](https://github.com/ScoopInstaller/Main/blob/master/bucket/witr.json) | [`scoop/`](./scoop) |
 | **Winget** | ✅ [Live](https://github.com/microsoft/winget-pkgs/tree/master/manifests/p/PranshuParmar/witr) | [`winget/`](./winget) |
 | **Anaconda** | ✅ [Live](https://github.com/conda-forge/witr-feedstock) | |
+| **npm** | ✅ [Live](https://www.npmjs.com/package/@pranshuparmar/witr) | [`npm/`](./npm) |
