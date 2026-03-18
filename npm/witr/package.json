@@ -1,6 +1,23 @@
 {
   "name": "@pranshuparmar/witr",
-  "version": "0.2.9",
+  "version": "0.3.1",
+  "keywords": [
+    "cli",
+    "linux",
+    "process",
+    "process-tracing",
+    "process-debugging",
+    "process-monitoring",
+    "debugging",
+    "troubleshooting",
+    "devops",
+    "sysadmin",
+    "pid",
+    "port",
+    "system-analysis",
+    "linux-debugging",
+    "witr"
+  ],
   "bin": {
     "witr": "index.js"
   },
