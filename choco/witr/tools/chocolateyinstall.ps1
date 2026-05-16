@@ -1,11 +1,11 @@
 ﻿$ErrorActionPreference = 'Stop'
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url64      = 'https://github.com/pranshuparmar/witr/releases/download/v0.3.1/witr-windows-amd64.zip'
-$checksum64 = 'c64a3c6496fe7eb2376e4e8632dc686171c0eeed575aaab7d2f8435d65426f67'
+$url64      = 'https://github.com/pranshuparmar/witr/releases/download/v0.3.2/witr-windows-amd64.zip'
+$checksum64 = 'c15d609f5a81438716aada23b03686c6448126d261989ceeda67d2f56437e2b1'
 $checksumType64 = 'sha256'
 
-$urlArm64      = 'https://github.com/pranshuparmar/witr/releases/download/v0.3.1/witr-windows-arm64.zip'
-$checksumArm64 = '53ba33bac48b6a36f4e4687496a35f330c8a36cff00cccee43a4d6a79a2cf1a4'
+$urlArm64      = 'https://github.com/pranshuparmar/witr/releases/download/v0.3.2/witr-windows-arm64.zip'
+$checksumArm64 = 'c8fd31796e566926b94eea95d13caf28d80cd338cabb188d737fa836b81641c0'
 $checksumTypeArm64 = 'sha256'
 
 $url = $url64
