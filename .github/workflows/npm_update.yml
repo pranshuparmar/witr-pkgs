@@ -1,0 +1,134 @@
+name: NPM Auto Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "witr version to publish (leave empty to use latest GitHub release)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  npm_release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: npm/witr
+
+    steps:
+      - name: Checkout packaging repo
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Resolve witr version
+        id: release
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            version="${INPUT_VERSION#v}"
+          else
+            tag=$(curl -fsSL \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              https://api.github.com/repos/pranshuparmar/witr/releases/latest \
+              | jq -r .tag_name)
+            version="${tag#v}"
+          fi
+          echo "Resolved witr version: $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check if version already published
+        id: check
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          pkg=$(node -p "require('./package.json').name")
+          if npm view "$pkg@$VERSION" version > /dev/null 2>&1; then
+            echo "$pkg@$VERSION is already published on npm, skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump version in package.json and index.js
+        if: steps.check.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = process.env.VERSION;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          node -e "
+            const fs = require('fs');
+            const f = 'index.js';
+            const src = fs.readFileSync(f, 'utf8');
+            const out = src.replace(/const VERSION = \"[^\"]+\";/, 'const VERSION = \"' + process.env.VERSION + '\";');
+            fs.writeFileSync(f, out);
+          "
+          echo "--- package.json ---"
+          grep '"version"' package.json
+          echo "--- index.js ---"
+          grep 'const VERSION' index.js
+
+      - name: Verify release assets exist
+        if: steps.check.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          assets=(
+            "witr-darwin-amd64"
+            "witr-darwin-arm64"
+            "witr-linux-amd64"
+            "witr-linux-arm64"
+            "witr-freebsd-amd64"
+            "witr-freebsd-arm64"
+            "witr-windows-amd64.zip"
+            "witr-windows-arm64.zip"
+          )
+          base="https://github.com/pranshuparmar/witr/releases/download/v${VERSION}"
+          for a in "${assets[@]}"; do
+            url="$base/$a"
+            code=$(curl -sIL -o /dev/null -w "%{http_code}" "$url")
+            if [ "$code" != "200" ]; then
+              echo "::error::Missing release asset: $url (HTTP $code)"
+              exit 1
+            fi
+            echo "ok: $url"
+          done
+
+      - name: Publish to npm
+        if: steps.check.outputs.skip != 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      - name: Commit version bump
+        if: steps.check.outputs.skip != 'true'
+        working-directory: .
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add npm/witr/package.json npm/witr/index.js
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(npm): release v${VERSION}"
+            git push origin HEAD:main
+          else
+            echo "No version changes to commit."
+          fi
