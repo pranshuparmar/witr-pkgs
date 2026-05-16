@@ -7,7 +7,7 @@ const fs = require("fs");
 const https = require("follow-redirects").https;
 const AdmZip = require("adm-zip");
 
-const VERSION = "0.3.1";
+const VERSION = "0.3.2";
 const BASE_URL = `https://github.com/pranshuparmar/witr/releases/download/v${VERSION}`;
 
 const platform = os.platform();
