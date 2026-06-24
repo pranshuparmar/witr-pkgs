@@ -1,6 +1,11 @@
 {
   "name": "@pranshuparmar/witr",
   "version": "0.3.3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pranshuparmar/witr-pkgs.git",
+    "directory": "npm/witr"
+  },
   "keywords": [
     "cli",
     "linux",
